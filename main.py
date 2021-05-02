@@ -1,10 +1,4 @@
-# TODO 1. Prompt user by asking “What would you like? (espresso/latte/cappuccino):”
-# TODO 2. Turn off the Coffee Machine by entering “off” to the prompt
-# TODO 3. Print report.
-# TODO 4. Check resources sufficient?
-# TODO 5. Process coins.
-# TODO 6. Check transaction successful?
-# TODO 7. Make Coffee.
+
 import coffee_data
 
 resources = coffee_data.resources
@@ -12,7 +6,7 @@ menu = coffee_data.MENU
 money_in_machine = 0
 
 
-def asking_user_wich_coffee():
+def asking_user_which_coffee():
     while True:
         user_typing = input("Hello, What would you like? (espresso/latte/cappuccino):\n").lower()
         if user_typing == "espresso":
@@ -22,21 +16,18 @@ def asking_user_wich_coffee():
         elif user_typing == "cappuccino":
             return menu["cappuccino"]
         elif user_typing == "report":
-            print_report()
+            print_report(resources, money_in_machine)
         elif user_typing == "q":
             return "q"
 
 
-def print_report(resources=resources, money_in_machine=money_in_machine):
-    '''Report generate current resource values'''
+def print_report(resources, money_in_machine):
+    """Report generate current resource values"""
     print(f"""
-    Water = {resources["water"]} ml
-    Milk = {resources["milk"]} ml
-    Coffee = {resources["coffee"]} g
-    Money = $ {money_in_machine}""")
-
-
-print_report()
+Water = {resources["water"]} ml
+Milk = {resources["milk"]} ml
+Coffee = {resources["coffee"]} g""")
+    print("Money = $ {:.2f}".format(round(money_in_machine,2)))
 
 
 def checking_resources(resources, user_coffee_ingredients):
@@ -55,9 +46,6 @@ def checking_resources(resources, user_coffee_ingredients):
             return False
     return True
 
-    # "Sorry there is not enough water."
-    # TODO 8 - REFACTOR - for x,y in resorce and .....
-
 
 def subtract_resources(resources, user_coffee_ingredients):
     if "water" in user_coffee_ingredients:
@@ -68,12 +56,8 @@ def subtract_resources(resources, user_coffee_ingredients):
 
     if "coffee" in user_coffee_ingredients:
         resources["coffee"] -= user_coffee_ingredients["coffee"]
-
     return resources
 
-
-# cos = checking_resources()
-# print(cos)
 
 def counting_coins(user_coffee):
     """Checking money is sufficient.
@@ -85,7 +69,7 @@ def counting_coins(user_coffee):
         dimes = int(input("how many dimes?: "))
         nickles = int(input("how many nickles?: "))
         pennies = int(input("how many pennies?: "))
-        value_of_inserted_coins = quarters * 0.25 + dimes * 0.10 + nickles * 0.05 + pennies * 0.01
+        value_of_inserted_coins = quarters*0.25 + dimes*0.10 + nickles*0.05 + pennies*0.01
 
         if user_coffee['cost'] > value_of_inserted_coins:
             print("Sorry that's not enough money. Money refunded.")
@@ -95,40 +79,33 @@ def counting_coins(user_coffee):
             return change
 
 
-# TODO ROUND !!
-
-
-### COFFY Machin
-# Test
-game_on_TEST = True
-money_in_machine = 0
-
 while True:
-    is_resorces = False
-    while is_resorces is not True:
+
+    is_resources = False
+
+    while is_resources is not True:
         # Coffee selection
-        user_coffee = asking_user_wich_coffee()
+        user_coffee = asking_user_which_coffee()
+        if user_coffee == 'q':
+            quit()
 
         user_coffee_ingredients = user_coffee["ingredients"]
-        user_coffee_price = user_coffee['cost']
-        print(f"user_coffee_price = {user_coffee_price =}")
-        # Checking resources
-        print(checking_resources(resources, user_coffee_ingredients))
-        is_resorces = checking_resources(resources, user_coffee_ingredients)
+        user_coffee_price = user_coffee["cost"]
 
-    #Test
-    # print_report(resources, money_in_machine)
+        # Checking resources
+        is_resources = checking_resources(resources, user_coffee_ingredients)
+
 
     # Counting and checking coins
-    money_to_return = counting_coins(user_coffee)
+    money_to_return = round(counting_coins(user_coffee), 2)
+
     # Adding coins too machine
-    money_in_machine = money_in_machine+user_coffee_price
-    # print(f"user_coffee_price = {user_coffee_price}")
-    # print(f"money_in_machine = {money_in_machine}")
+    money_in_machine = money_in_machine + user_coffee_price
+
+
     # Subtract resources from machine,
     resources = subtract_resources(resources, user_coffee_ingredients)
+
     # Returning money
-    print(f"Here is ${money_to_return} dollars in change.")
+    print("Here is ${:.2f} dollars in change.".format(money_to_return))
     print("Here is your latte.Enjoy!")
-
-
