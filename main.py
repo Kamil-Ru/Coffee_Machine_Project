@@ -32,17 +32,9 @@ Coffee = {resources["coffee"]} g""")
 
 def checking_resources(resources, user_coffee_ingredients):
     """Checking resources is sufficient, and return True if sufficient, or False."""
-    if "water" in user_coffee_ingredients:
-        if resources["water"] < user_coffee_ingredients["water"]:
-            print("Sorry there is not enough water.")
-            return False
-    elif "milk" in user_coffee_ingredients:
-        if resources["milk"] < user_coffee_ingredients["milk"]:
-            print("Sorry there is not enough milk.")
-            return False
-    elif "coffee" in user_coffee_ingredients:
-        if resources["coffee"] < user_coffee_ingredients["coffee"]:
-            print("Sorry there is not enough coffee.")
+    for item in user_coffee_ingredients:
+        if user_coffee_ingredients[item] >= resources[item]:
+            print(f"Sorry there is not enough {item}.")
             return False
     return True
 
@@ -65,11 +57,10 @@ def counting_coins(user_coffee):
     Return change if is enough money."""
     while True:
         print("Please insert coins.")
-        quarters = int(input("how many quarters?: "))
-        dimes = int(input("how many dimes?: "))
-        nickles = int(input("how many nickles?: "))
-        pennies = int(input("how many pennies?: "))
-        value_of_inserted_coins = quarters*0.25 + dimes*0.10 + nickles*0.05 + pennies*0.01
+        value_of_inserted_coins = int(input("how many quarters?: ")) * 0.25
+        value_of_inserted_coins += int(input("how many dimes?: ")) * 0.10
+        value_of_inserted_coins += int(input("how many nickles?: ")) * 0.05
+        value_of_inserted_coins += int(input("how many pennies?: ")) * 0.01
 
         if user_coffee['cost'] > value_of_inserted_coins:
             print("Sorry that's not enough money. Money refunded.")
@@ -77,7 +68,6 @@ def counting_coins(user_coffee):
         elif user_coffee['cost'] <= value_of_inserted_coins:
             change = value_of_inserted_coins - user_coffee['cost']
             return change
-
 
 while True:
 
